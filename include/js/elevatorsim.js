@@ -2,7 +2,7 @@
 var cPersonState = { work:"work", break:"break", home:"home" };
 var cElevator = { wait:"wait", idle:"idle", moving:"moving", closing:"closing", opening: "opening" };
 var cLocations = { outside:"outside", elobby:"elobby", elevator:"elevator", office:"office"};
-var cTravel = { outside:45, elobby:5, office:45, break:30 };
+var cTravel = { outside:15, elobby:3, office:15, break:30 };
 
 var arrFloorMatrix = [ ["ground", false, 0, 0], ["Two", false, 400, 0], ["Three", false, 400, 0], ["Four", false, 400, 0], ["Five", false, 400, 0] ]
 var totalPeople = 1600;
@@ -23,18 +23,24 @@ function Person(blnVisitor) {
          ,elevator:-1 };
     
     // Randomly get destination by weight
-    iPerson = Math.floor( 1 + Math.random() * 1600 );
+    iPerson = Math.floor( 1 + Math.random() * 4 );
+    if ( iPerson > 4 ) iPerson = 4;
 
-    var i;
-    for( intI = 0; intI < arrFloorMatrix.length ; intI++ ) {
-        if ( iPerson > arrFloorMatrix[intI][2] )
-            iPerson -= arrFloorMatrix[intI][2];
-        else {
-            this.travel.work = intI;
-            arrFloorMatrix[intI][2]--;
-            totalPeople--;
-            break;
-        }
+    var intI;
+
+    if ( arrFloorMatrix[iPerson][2] > 0 ) {
+        this.travel.work = iPerson;
+        arrFloorMatrix[iPerson][2]--;
+        totalPeople--;
+    } else {
+	    for( intI = 0; intI < arrFloorMatrix.length ; intI++ ) {
+	    	 if ( arrFloorMatrix[intI][2] > 0 ) {
+	                this.travel.work = intI;
+	                arrFloorMatrix[intI][2]--;
+	                totalPeople--;
+	                break;
+            }
+	    }
     }
 
     this.staytime = 0;  // How long person stays @ work
@@ -172,7 +178,7 @@ function Elevator() {
     this.status = "idle";
     this.eta = 0;
     this.passengers = 0;
-    this.specs = { door:10, starting:8, moving:3, capacity:20 };
+    this.specs = { door:5, starting:4, moving:3, capacity:20 };
 
     this.idleTime = 0;
     this.idleTimes = new Array();
