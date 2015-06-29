@@ -4,16 +4,94 @@
 <head>
     <title></title>
 
+<style>
 
-<script src="js/elevatorsim.js" />
-<script>
+.flavourTXT {
+	font-size: 10px;
+	font-style: italic;
+    display: inline-block;
+}
 
-</script>
+.dvInput {
+	text-align: center;
+}
+
+.dvReadonly {
+	text-align: center;
+	background-color: #CCCCCC;
+}
+
+</style>
+<script src="include/js/elevatorsim.js"></script>
+<script src="include/js/jquery.min.js"></script>
+
 </head>
 <body>
-<input type="checkbox" onclick="debug=this.checked;" checked>DEBUG<br>
-<input type="checkbox" onclick="running=this.checked;" checked>RUNNING<br><br>
+<table>
+	<tr><td colspan=4 >Application Variables:</td></tr>
+	<tr><td width="50px"></td>
+		<td><input type="checkbox" onclick="debug=this.checked;"></td>
+		<td colspan=2 >Print Debug Messages</td>
+		</tr>
+	<tr><td></td>
+		<td><input type="checkbox" onclick="running=this.checked;" checked></td>
+		<td colspan=2 >Execute Application upon Iterate</td>
+		</tr>
+	<tr><td colspan=4 ><br>Siumulation Variables:</td></tr>
+	<tr><td colspan="2"></td>
+		<td>Starting Iteration <div class="flavourTXT">(cannot change once started)</div></td>
+		<td><input id=dvStartIteration class="dvInput" value=""></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td>Iteration Length</div></td>
+		<td><input id=dvIterationLength class="dvInput" onchange='simVars.iterate = $("#dvIterationLength").val();' value="100"></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td># of Lifts <div class="flavourTXT">(cannot change once started)</div></td>
+		<td><input id=dvLifts class="dvInput" value="3"></td>
+		</tr>
+	<tr><td colspan=4 ><br>Output Variables:</td></tr>
+	<tr><td colspan="2"></td>
+		<td>5th Floor</div></td>
+		<td><input id=dvF5People class="dvReadonly" value=""><input id=dvF5Employees class="dvInput" value="400" onchange='arrFloorMatrix[4][2] = $("#dvF5Employees").val();' ></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td>4th Floor</div></td>
+		<td><input id=dvF4People class="dvReadonly" value=""><input id=dvF4Employees class="dvInput" value="400" onchange='arrFloorMatrix[3][2] = $("#dvF4Employees").val();' ></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td>3rd Floor</div></td>
+		<td><input id=dvF3People class="dvReadonly" value=""><input id=dvF3Employees class="dvInput" value="400" onchange='arrFloorMatrix[2][2] = $("#dvF3Employees").val();' ></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td>2nd Floor</div></td>
+		<td><input id=dvF2People class="dvReadonly" value=""><input id=dvF2Employees class="dvInput" value="400" onchange='arrFloorMatrix[1][2] = $("#dvF2Employees").val();' ></td>
+		</tr>
+	<tr><td colspan="2"></td>
+		<td>Ground Floor</div></td>
+		<td><input id=dvF1People class="dvReadonly" value=""><input id=dvF1Employees class="dvInput" value="0" onchange='arrFloorMatrix[0][2] = $("#dvF1Employees").val();' ></td>
+		</tr>
+	</table><br><br>
 
-<button onclick="iteration();" >Iterate</button>
+<button onclick="start();" >Iterate</button>
+<input id="dvIteration" width="100" readonly value=""><br><br>
+
+<textarea id="console" width="800"></textarea>
+
+<script>
+
+	function start() {
+		stat.iterate = 0;
+		simVars.id = setInterval( iteration, simVars.wait );
+	}
+
+	$(document).ready(function() {
+	    $("#console").width(800);
+	    $("#console").height(400);
+	});
+
+	update_displayVariables();
+
+</script>
 </body>
 </html>
